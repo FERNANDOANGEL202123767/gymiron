@@ -1,0 +1,1 @@
+<footer class="main">Copyright &copy; 2024 <strong>Iron Gym </strong></footer>

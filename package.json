@@ -1,0 +1,12 @@
+{
+  "name": "gymiron",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo 'Specify your build script here'"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": ""
+}

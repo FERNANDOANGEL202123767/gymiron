@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro WebAuthn</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Registrar Huella</h1>
+    <input type="text" id="username" placeholder="Nombre de usuario">
+    <button id="registerButton">Registrar</button>
+
+    <script>
+        $('#registerButton').click(async function () {
+            const username = $('#username').val();
+            const userId = Math.random().toString(36).substr(2, 9); // Genera un ID de usuario único
+
+            const response = await fetch('routes.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: 'start_registration', username, userId })
+            });
+
+            const publicKeyCredentialCreationOptions = await response.json();
+
+            const credential = await navigator.credentials.create({ publicKey: publicKeyCredentialCreationOptions });
+
+            const credentialData = {
+                id: credential.id,
+                rawId: arrayBufferToBase64(credential.rawId),
+                response: {
+                    attestationObject: arrayBufferToBase64(credential.response.attestationObject),
+                    clientDataJSON: arrayBufferToBase64(credential.response.clientDataJSON)
+                },
+                type: credential.type
+            };
+
+            await fetch('routes.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ action: 'finish_registration', credentialData, userId })
+            });
+
+            alert('Registro completado');
+        });
+
+        function arrayBufferToBase64(buffer) {
+            return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        }
+    </script>
+</body>
+</html>

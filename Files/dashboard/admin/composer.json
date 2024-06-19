@@ -1,0 +1,5 @@
+{
+    "require": {
+        "web-auth/webauthn-framework": "^4.8"
+    }
+}
